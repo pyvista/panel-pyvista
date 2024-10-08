@@ -3,6 +3,8 @@ import pandas as pd
 import panel as pn
 from pyvista_panel import PyVistaPlotter
 
+import hvplot.pandas  # noqa
+
 
 # Generate sine wave data
 def generate_sine_wave(freq, amp, phase, num_points=500):

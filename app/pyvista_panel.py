@@ -45,7 +45,6 @@ class PyVistaPlotter(GlobalStateMixin, pn.viewable.Viewer):
             self._plotter.add_actor(actor)
 
         self._plotter.camera_position = "xy"
-        print("plotter initialized")
 
     @property
     def plotter(self):
@@ -57,4 +56,3 @@ class PyVistaPlotter(GlobalStateMixin, pn.viewable.Viewer):
     def add_mesh(self, mesh, **kwargs):
         self.plotter.add_mesh(mesh, **kwargs)
         self.plotter.update()
-        print("added mesh")
