@@ -1,0 +1,7 @@
+panel==1.5.2
+trame==3.6.5
+trame-vtk==2.8.10
+trame-vuetify==2.7.1
+nest-asyncio==1.6.0
+hvplot==0.11.0
+async-timeout==4.0.3

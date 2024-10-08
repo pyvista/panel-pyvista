@@ -1,0 +1,12 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    tty: true
+    volumes:
+      - .:/app
+    ports:
+      - 8080:8080
+      - 5090:5090  # not really necessary
+    network_mode: 'host'  # required because of trame
