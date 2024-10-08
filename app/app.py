@@ -1,5 +1,4 @@
 import numpy as np
-import hvplot.pandas
 import pandas as pd
 import panel as pn
 from pyvista_panel import PyVistaPlotter

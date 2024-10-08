@@ -39,6 +39,6 @@ gcloud run services update panel-example --region us-central1 --min-instances=1
 Google Cloud Run only exposes a single port, 8080, and all traffic to 5090 will
 be blocked. You can simulate that by disabling the port mapping in docker
 compose by commenting out `5090:5090` or `network_mode: 'host'`. Actually, the
-port mapping `5090:5090` isn't really necessary here becuase the host network
+port mapping `5090:5090` isn't really necessary here because the host network
 mode exposes all ports; disabling host network mode causes this app to fail
 when launched from docker even when exposing 5090.
