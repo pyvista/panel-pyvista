@@ -10,24 +10,21 @@ pv.set_plot_theme("document")
 pv.global_theme.show_scalar_bar = False
 
 
-plotter = pv.Plotter()  # we define a pyvista plotter
-plotter.background_color = (0.1, 0.2, 0.4)
-# we create a `VTK` panel around the render window
-pn.panel(plotter.ren_win, width=500, height=500)
-
-
 class PyVistaPlotter(GlobalStateMixin, pn.viewable.Viewer):
     def __init__(self):
         self._plotter = pv.Plotter()  # we define a pyvista plotter
 
         pl = pv_demos.plot_logo(just_return_plotter=True)
         for actor in pl.actors.values():
+            actor.prop.interpolation = 0
             self._plotter.add_actor(actor)
 
         self._plotter.camera_position = "xy"
 
         # Create a `VTK` panel around the render window
-        self._vtk_panel = pn.panel(self._plotter.ren_win, width=1000, height=500)
+        self._vtk_panel = pn.panel(
+            self._plotter.ren_win, sizing_mode="stretch_both", height=500
+        )
 
     @property
     def plotter(self):
