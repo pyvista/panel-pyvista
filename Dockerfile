@@ -1,18 +1,27 @@
+###############################################################################
+# First stage: Build stage
+FROM ghcr.io/pyvista/pyvista:latest-slim AS builder
+
+# Install dependencies
+COPY /app/requirements.txt .
+RUN pip install -r requirements.txt --no-deps
+
+CMD ["python", "/app/app.py"]
+
+###############################################################################
+# Second stage: Final stage for a slimmer production image
 FROM ghcr.io/pyvista/pyvista:latest-slim
+
+# Copy the installed dependencies from the builder stage
+COPY --from=builder /usr/local/lib/python3.*/site-packages /usr/local/lib/python3.*/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Allow statements and log messages to immediately appear in the Knative logs
 ENV PYTHONUNBUFFERED=True
+ENV APP_PORT=8080
 
-ENV APP_HOME=/app
-ENV PORT=8080
+# Copy application directory only
+COPY /app /app
 
-# Copy local code to the container image.
-ENV APP_HOME=/app
-WORKDIR $APP_HOME
-COPY . ./
-
-# Install production dependencies.
-RUN pip install -r requirements.txt --no-deps
-
-# Run the web service on container startup.
-CMD panel serve app/app.py --address 0.0.0.0 --port $PORT --allow-websocket-origin="*"
+# Run the panel app on container startup
+CMD ["python", "/app/app.py"]
