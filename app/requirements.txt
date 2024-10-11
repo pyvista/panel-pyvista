@@ -35,7 +35,6 @@ bleach==6.1.0
     #   panel
 bokeh==3.6.0
     # via
-    #   -r app/requirements.in
     #   holoviews
     #   hvplot
     #   panel
@@ -163,7 +162,6 @@ packaging==24.1
     #   panel
 pandas==2.2.3
     # via
-    #   -r app/requirements.in
     #   bokeh
     #   holoviews
     #   hvplot

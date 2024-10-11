@@ -6,7 +6,6 @@ import pyvista as pv
 from pyvista.core.utilities.helpers import generate_plane
 from pyvista import examples
 from pyvista.plotting import Plotter
-from pyvista.trame.jupyter import elegantly_launch
 from param.parameterized import Event
 from pyvista.core.filters import _get_output
 from pyvista.plotting import _vtk
@@ -19,14 +18,28 @@ from pyvista.plotting.utilities import (
 )
 
 
-from constants import PYVISTA_PORT
 from common import DEFAULT_BACKEND, show_panel, CMAPS
-
-elegantly_launch(port=PYVISTA_PORT, host="localhost")
 
 # Define stress components
 STRESS_TYPES = ["X", "Y", "Z", "XY", "YZ", "XZ"]
 DEFAULT_CMAP = "jet"
+
+# Load the mesh and fix the cell types (quadratic --> linear)
+mesh = examples.download_notch_stress()
+mesh.cell_connectivity
+
+celltypes = mesh.celltypes
+fixed_cells = []
+cells = np.split(mesh.cell_connectivity, mesh.offset)[1:-1]
+for idx, cell in enumerate(cells):
+    if celltypes[idx] == pv.CellType.HEXAHEDRON:
+        fixed_cells.append(np.hstack(([8], cell[:8])))
+    elif celltypes[idx] == pv.CellType.WEDGE:
+        fixed_cells.append(np.hstack(([6], cell[:6])))
+
+new_mesh = pv.UnstructuredGrid(np.hstack(fixed_cells), celltypes, mesh.points)
+for ii in range(6):
+    new_mesh[f"Nodal Stress-{ii}"] = mesh["Nodal Stress"][:, ii]
 
 
 class FeaPlotter(pn.viewable.Viewer):
@@ -35,22 +48,6 @@ class FeaPlotter(pn.viewable.Viewer):
         self._plotter = Plotter(off_screen=True, notebook=True)
         self._plotter.add_axes()  # type:ignore
         self._plotter_pane = show_panel(self._plotter, jupyter_backend=jupyter_backend)
-
-        # Load the mesh and fix the cell types (quadratic --> linear)
-        mesh = examples.download_notch_stress()
-        mesh.cell_connectivity
-        celltypes = mesh.celltypes
-        fixed_cells = []
-        cells = np.split(mesh.cell_connectivity, mesh.offset)[1:-1]
-        for idx, cell in enumerate(cells):
-            if celltypes[idx] == pv.CellType.HEXAHEDRON:
-                fixed_cells.append(np.hstack(([8], cell[:8])))
-            elif celltypes[idx] == pv.CellType.WEDGE:
-                fixed_cells.append(np.hstack(([6], cell[:6])))
-
-        new_mesh = pv.UnstructuredGrid(np.hstack(fixed_cells), celltypes, mesh.points)
-        for ii in range(6):
-            new_mesh[f"Nodal Stress-{ii}"] = mesh["Nodal Stress"][:, ii]
 
         # Add the mesh to the plotter
         self._mesh = new_mesh

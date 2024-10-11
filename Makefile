@@ -24,6 +24,18 @@ shell:
 serve:
 	python app/app.py
 
-# Serve using the docker image but skip rebuilding if dependencies were built before
+# Serve using the docker image
 serve-docker:
 	$(DOCKER) python /app/app.py
+
+deploy:
+	gcloud run deploy pyvista-demo --source $(shell pwd) \
+    --cpu=1 \
+    --memory=1Gi \
+    --allow-unauthenticated \
+    --min-instances=1 \
+    --max-instances=1 \
+    --port=8080 \
+    --timeout=3600 \
+    --region=us-central1
+# --service-account='YOUR-SERVICE-ACCOUNT'

@@ -3,7 +3,7 @@
 This is a minimum working example of using PyVista/Trame with Panel. It's a
 simple two tab single page app with:
 - Tab 1 - PyVista Plotter Widget
-- Tab 2 - Interactive sine wave
+- Tab 2 - FEA Viewer
 
 ### Running the Application Locally
 
@@ -17,14 +17,15 @@ make serve
 Visit http://localhost:8080
 
 
-#### With Docker (dev)
+#### With Docker Compose
 
 ```
 make build
-make serve-docker-dev
+make serve-docker
 ```
 
 Visit http://localhost:8080
 
 
 ### Deploy on the cloud
+

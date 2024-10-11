@@ -6,6 +6,3 @@ nest-asyncio==1.6.0
 hvplot==0.11.0
 async-timeout==4.0.3
 jupyter-server-proxy
-hvplot
-bokeh
-pandas

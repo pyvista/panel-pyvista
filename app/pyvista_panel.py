@@ -24,6 +24,7 @@ class PyVistaPlotter(pn.viewable.Viewer):
         for name, actor in pl.actors.items():
             actor.prop.ambient = 0.3
             self._plotter.add_actor(actor, name=name)
+
         self._plotter.camera_position = "xy"
 
         # bounding box actor
