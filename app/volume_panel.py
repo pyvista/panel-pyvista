@@ -11,6 +11,7 @@ pn.extension("floatpanel")
 
 carotid = examples.download_carotid()
 
+# for testing
 # plotter = Plotter()
 # actor = plotter.add_volume(carotid)
 # actor.mapper.lookup_table.apply_opacity([1, 1])
