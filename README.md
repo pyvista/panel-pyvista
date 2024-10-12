@@ -1,6 +1,8 @@
 ### Using PyVista & Trame with Panel
 
-![App Screenshot](./app-sc.png)
+[![App Screenshot](./app-sc.png)](https://panel-example-production.up.railway.app/)
+
+**Visit the demo at [pyvista-panel-example](https://panel-example-production.up.railway.app/).**
 
 This is an example of using [PyVista](https://docs.pyvista.org/) & [Trame](https://kitware.github.io/trame/) with [Panel](https://panel.holoviz.org/). It's designed to be able to be deployed on the cloud (e.g. [GCP](https://cloud.google.com/)) as a containerized application that only relies on a single port being exposed .
 
