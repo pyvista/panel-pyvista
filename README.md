@@ -1,23 +1,20 @@
-### MWE - Panel + PyVista
+### Using PyVista & Trame with Panel
 
-This is a minimum working example of using PyVista/Trame with Panel. It's a
-simple two tab single page app with:
-- Tab 1 - PyVista Plotter Widget
-- Tab 2 - Interactive sine wave
+![App Screenshot](./app-sc.png)
 
-### Without Docker
+This is an example of using [PyVista](https://docs.pyvista.org/) & [Trame](https://kitware.github.io/trame/) with [Panel](https://panel.holoviz.org/). It's designed to be able to be deployed on the cloud (e.g. [GCP](https://cloud.google.com/)) as a containerized application that only relies on a single port being exposed .
+
+Normally, Trame requires you to open up a second port in addition to the default to the Panel port, but here we use [jupyter-server-proxy](https://github.com/jupyterhub/jupyter-server-proxy) to proxy the traffic to an endpoint of our choosing, in this case, `/proxy`. This way, we can get the benefits of using the Trame with PyVista and being able to deploy on the cloud.
+
+While, Panel already has a [VTK](https://panel.holoviz.org/reference/panes/VTK.html) extension, it uses an old serializer, meaning you'll be missing out in all the latest changes from Trame.
+
+### Running the Application Locally
+
+You can run the application locally with and without Docker.
+
+#### With Docker Compose
 
 ```bash
-pip install -r requirements.txt
-make serve
-```
-
-Visit http://localhost:5006
-
-
-### With Docker
-
-```
 make build
 make serve-docker
 ```
@@ -25,20 +22,43 @@ make serve-docker
 Visit http://localhost:8080
 
 
-### Issues
+#### Without Docker
 
-This application works because the trame port (5090) is exposed to the
-host. This normally isn't an issue if you have control over the infrastructure
-(e.g. private network or your own computer), but if you're deploying to [Google
-Cloud](https://cloud.google.com/) with something like:
-
-```
-gcloud run services update panel-example --region us-central1 --min-instances=1
+```bash
+pip install -r app/requirements.txt
+pip install setuptools pyvista
+make serve
 ```
 
-Google Cloud Run only exposes a single port, 8080, and all traffic to 5090 will
-be blocked. You can simulate that by disabling the port mapping in docker
-compose by commenting out `5090:5090` or `network_mode: 'host'`. Actually, the
-port mapping `5090:5090` isn't really necessary here because the host network
-mode exposes all ports; disabling host network mode causes this app to fail
-when launched from docker even when exposing 5090.
+Note the two extra requirements since they're normally included in the docker image.
+
+Visit http://localhost:8080
+
+### Development
+
+This repository uses `pip-compile` to generate a `requirements.txt` file from
+`requirements.in`, locking down your requirements given a set of
+dependencies. This is used to ensure that the version of all of your
+requirements (e.g. dependencies of dependencies) do not change when the docker
+image is built. Run this with:
+
+```bash
+pip install pip-tools
+make compile-requirements
+```
+
+### Deployment on the Cloud
+
+This app is designed to be hosted as a containerized application on the cloud.
+
+This application can be deployed on major cloud providers by either generating
+and deploying the docker image, or in the case of GCP, simply running `gcloud
+run deploy` and deploying directly from source, as can be useful in
+development.
+
+Here's an example:
+
+```bash
+gcloud run deploy pyvista-demo --source=/home/user/source/panel-example --region=us-central1 --project=reliable-house-439292-m4
+```
+
