@@ -179,7 +179,7 @@ param==2.1.1
     #   hvplot
     #   panel
     #   pyviz-comms
-pillow==10.4.0
+pillow==13.0.0
     # via bokeh
 platformdirs==4.3.6
     # via jupyter-core
